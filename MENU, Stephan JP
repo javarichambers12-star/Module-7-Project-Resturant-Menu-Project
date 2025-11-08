@@ -1,0 +1,117 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static Dictionary<string, List<string>> myDictionary = new Dictionary<string, List<string>>();
+
+    static void Main(string[] args)
+    {
+        bool running = true;
+
+        while (running)
+        {
+            Console.WriteLine("\nChoose an option:");
+            Console.WriteLine("1. Populate Dictionary");
+            Console.WriteLine("2. Display Dictionary Contents");
+            Console.WriteLine("3. Remove a Key");
+            Console.WriteLine("4. Add New Key and Value");
+            Console.WriteLine("5. Add Value to Existing Key");
+            Console.WriteLine("6. Sort Keys");
+            Console.WriteLine("7. Exit");
+
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    PopulateDictionary();
+                    break;
+                case "2":
+                    DisplayDictionary();
+                    break;
+                case "3":
+                    RemoveKey();
+                    break;
+                case "4":
+                    AddNewKeyValue();
+                    break;
+                case "5":
+                    AddValueToExistingKey();
+                    break;
+                case "6":
+                    SortKeys();
+                    break;
+                case "7":
+                    running = false;
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice.");
+                    break;
+            }
+        }
+    }
+
+    static void PopulateDictionary()
+    {
+        myDictionary["Fruit"] = new List<string> { "Apple", "Banana" };
+        myDictionary["Vegetable"] = new List<string> { "Carrot", "Broccoli" };
+        Console.WriteLine("Dictionary populated.");
+    }
+
+    static void DisplayDictionary()
+    {
+        foreach (var pair in myDictionary)
+        {
+            Console.WriteLine($"{pair.Key}: {string.Join(", ", pair.Value)}");
+        }
+    }
+
+    static void RemoveKey()
+    {
+        Console.Write("Enter key to remove: ");
+        string key = Console.ReadLine();
+        if (myDictionary.Remove(key))
+            Console.WriteLine("Key removed.");
+        else
+            Console.WriteLine("Key not found.");
+    }
+
+    static void AddNewKeyValue()
+    {
+        Console.Write("Enter new key: ");
+        string key = Console.ReadLine();
+        Console.Write("Enter value: ");
+        string value = Console.ReadLine();
+        myDictionary[key] = new List<string> { value };
+        Console.WriteLine("New key-value pair added.");
+    }
+
+    static void AddValueToExistingKey()
+    {
+        Console.Write("Enter existing key: ");
+        string key = Console.ReadLine();
+        if (myDictionary.ContainsKey(key))
+        {
+            Console.Write("Enter value to add: ");
+            string value = Console.ReadLine();
+            myDictionary[key].Add(value);
+            Console.WriteLine("Value added.");
+        }
+        else
+        {
+            Console.WriteLine("Key not found.");
+        }
+    }
+
+    static void SortKeys()
+    {
+        var sortedKeys = myDictionary.Keys.OrderBy(k => k).ToList();
+        Console.WriteLine("Sorted Keys:");
+        foreach (var key in sortedKeys)
+        {
+            Console.WriteLine(key);
+        }
+    }
+}
