@@ -1,0 +1,163 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    // Dictionary to store menu categories and their items
+    static Dictionary<string, List<string>> restaurantMenu = new Dictionary<string, List<string>>();
+
+    static void Main()
+    {
+        Console.WriteLine("--- Welcome to the Restaurant Menu Manager ---\n");
+
+        //Javari: Step A: Populate the dictionary with sample menu items
+        PopulateMenu();
+
+        //Javari: Step B: Display the dictionary contents using foreach
+        DisplayMenu();
+
+        //Roman: Step E: Add value to existing key
+        AddValueToExistingKey();
+
+        //Roman: Step F: Sort and display keys
+        SortKeys();
+
+        // Marie: Step C & D: Manage priced menu items
+        ManagePricedMenu();
+    }
+
+    // Step A: Populate the dictionary
+    static void PopulateMenu()
+    {
+        restaurantMenu.Clear(); // Start fresh
+
+        restaurantMenu["Appetizers"] = new List<string> { "Fries", "Garlic Bread", "Wings" };
+        restaurantMenu["Main Course"] = new List<string> { "Grilled Chicken", "Pasta", "Burger" };
+        restaurantMenu["Desserts"] = new List<string> { "Chocolate Cake", "Ice Cream", "Pie" };
+
+        Console.WriteLine("Menu has been populated with sample items.");
+    }
+
+    // Step B: Display the dictionary contents
+    static void DisplayMenu()
+    {
+        Console.WriteLine("\n--- Restaurant Menu ---");
+
+        foreach (var category in restaurantMenu)
+        {
+            Console.WriteLine($"Category: {category.Key}");
+            Console.WriteLine("Items: " + string.Join(", ", category.Value));
+            Console.WriteLine();
+        }
+    }
+
+    // Step E: Add value to existing key
+    static void AddValueToExistingKey()
+    {
+        Console.Write("Enter the category you wish to add a new item to: ");
+        string category = Console.ReadLine();
+
+        if (restaurantMenu.ContainsKey(category))
+        {
+            Console.Write("Enter the name of the new item: ");
+            string newItem = Console.ReadLine();
+            restaurantMenu[category].Add(newItem);
+            Console.WriteLine($"Item '{newItem}' added to category '{category}'.");
+        }
+        else
+        {
+            Console.WriteLine($"Category '{category}' wasn't found.\nCheck for spelling mistakes or whether the category exists.");
+        }
+    }
+
+    // Step F: Sort keys
+    static void SortKeys()
+    {
+        Console.WriteLine("\n--- Sorted Menu by Category ---");
+        foreach (var key in new SortedDictionary<string, List<string>>(restaurantMenu))
+        {
+            Console.WriteLine($"Category: {key.Key}");
+            Console.WriteLine("Items: " + string.Join(", ", key.Value));
+            Console.WriteLine();
+        }
+    }
+
+    // Step C & D: Manage priced menu items
+    static void ManagePricedMenu()
+    {
+        RestaurantMenu myMenu = new RestaurantMenu();
+
+        // Adding items
+        myMenu.AddMenuItem("Spaghetti Carbonara", 15.99m);
+        myMenu.AddMenuItem("Caesar Salad", 8.50m);
+        myMenu.AddMenuItem("Pizza Margherita", 12.00m);
+        myMenu.AddMenuItem("Spaghetti Carbonara", 16.50m); // Attempt to add duplicate
+
+        myMenu.DisplayMenu();
+
+        // Removing items
+        myMenu.RemoveMenuItem("Caesar Salad");
+        myMenu.RemoveMenuItem("French Fries"); // Attempt to remove non-existent item
+
+        myMenu.DisplayMenu();
+
+        // Adding another item
+        myMenu.AddMenuItem("Chocolate Lava Cake", 7.25m);
+
+        myMenu.DisplayMenu();
+    }
+}
+
+// Class for priced menu items
+public class RestaurantMenu
+{
+    private Dictionary<string, decimal> menuItems;
+
+    public RestaurantMenu()
+    {
+        menuItems = new Dictionary<string, decimal>();
+    }
+
+    // Step D: Add a new key-value pair
+    public void AddMenuItem(string itemName, decimal price)
+    {
+        if (!menuItems.ContainsKey(itemName))
+        {
+            menuItems.Add(itemName, price);
+            Console.WriteLine($"'{itemName}' added to the menu with price ${price:F2}.");
+        }
+        else
+        {
+            Console.WriteLine($"Error: '{itemName}' already exists on the menu.");
+        }
+    }
+
+    // Step C: Remove a key
+    public void RemoveMenuItem(string itemName)
+    {
+        if (menuItems.Remove(itemName))
+        {
+            Console.WriteLine($"'{itemName}' removed from the menu.");
+        }
+        else
+        {
+            Console.WriteLine($"Error: '{itemName}' not found on the menu.");
+        }
+    }
+
+    public void DisplayMenu()
+    {
+        if (menuItems.Count == 0)
+        {
+            Console.WriteLine("The menu is currently empty.");
+            return;
+        }
+
+        Console.WriteLine("\n--- Current Priced Menu ---");
+        foreach (var item in menuItems)
+        {
+            Console.WriteLine($"- {item.Key}: ${item.Value:F2}");
+        }
+        Console.WriteLine("----------------------------\n");
+    }
+}
